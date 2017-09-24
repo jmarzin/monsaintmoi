@@ -1,0 +1,102 @@
+@(gpx: Gpx, existeListeMateriels: Boolean)(implicit request: MessagesRequest[AnyContent])
+@import org.joda.time.DateTime
+@import org.joda.time.format.DateTimeFormat
+@base.main() {
+    <div class="container">
+        @if(request.session.get("admin").contains("true")) {
+                <a type="button" class="btn btn-link fa fa-trash"
+                href="@routes.GpxController.deleteGpx(gpx.id)" onclick="deleteDialog(event)"></a>
+                <a type="button" class="btn btn-link fa fa-pencil"
+                href="@routes.GpxController.editGpx(gpx.id)"></a>
+        }
+        <h2 class="text-center">@gpx.titre</h2>
+        <h3 class="text-center">@gpx.sousTitre</h3>
+        @defining(java.text.NumberFormat.getIntegerInstance(new java.util.Locale("fr", "FR"))) { formatage =>
+            <div class="row">
+                <div class="col-md-4">
+                    @if(!gpx.heureDebut.isEmpty) {
+                        @defining(new DateTime(gpx.heureDebut)) { d =>
+                            Départ le &nbsp@DateTimeFormat.forPattern("d MMMM yyyy à h 'h' mm").print(d)
+                        }
+                    }
+                </div>
+                <div class="col-md-2">
+                    Distance : @formatage.format(gpx.distanceTotale) m
+                </div>
+                <div class="col-md-3">
+                    Altitude minimum &nbsp: @formatage.format(gpx.altitudeMinimum) m
+                </div>
+                <div class="col-md-3">
+                    Ascension totale : @formatage.format(gpx.ascensionTotale) m
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                @if(!gpx.heureDebut.isEmpty) {
+                    @defining(new DateTime(gpx.heureFin)) { d =>
+                        Arrivée le @DateTimeFormat.forPattern("d MMMM yyyy à H 'h' mm").print(d)
+                    }
+                }
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-3">
+                    Altitude maximum : @formatage.format(gpx.altitudeMaximum) m
+                </div>
+                <div class="col-md-3">
+                    Descente totale  &nbsp: @formatage.format(gpx.descenteTotale) m
+                </div>
+            </div>
+            @if(!gpx.nomFichier.isEmpty) {
+                <small>Cliquez sur le tracé pour voir le profil.</small>
+
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                            <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title align-self-center">Profil</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <svg height="100%" width="100%" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid meet">
+                                        @Html(gpx.coordonneesPix)
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mapid"></div>
+            }
+        }
+        @Html(gpx.description)
+        @if(gpx.typegpx == "T") {
+            <a href="@routes.GpxController.listGpxTrk(gpx.id, 1)" class="btn btn-primary">Liste des étapes</a>
+        }
+        @if(gpx.idTrek > 0) {
+            <a href="@routes.GpxController.showGpx(gpx.idTrek)" class="btn btn-primary">Voir le trek</a>
+        }
+        @if(existeListeMateriels){
+            <a href="@routes.MaterielController.listTrekMateriel(gpx.id)" class="btn btn-primary">Voir les matériels emportés</a>
+        }
+    </div>
+    @if(!gpx.nomFichier.isEmpty) {
+        <script>
+            @if(gpx.typegpx == "R") {
+                afficheCarte('mapid', '@routes.Assets.at("contenu/gpx/randos/" + gpx.nomFichier)',
+                    '@gpx.depart', '@gpx.arrivee')
+            } else {
+                afficheCarte('mapid', '@routes.Assets.at("contenu/gpx/treks/" + gpx.nomFichier)',
+                    '@gpx.depart', '@gpx.arrivee')
+            }
+        </script>
+    }
+
+}

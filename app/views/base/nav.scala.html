@@ -1,0 +1,33 @@
+@()
+<!-- Navigation -->
+<nav class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarExample" aria-controls="navbarExample" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="container">
+        <a class="navbar-brand" href="@routes.HomeController.index">Mon Saint Moi</a>
+        <div class="collapse navbar-collapse" id="navbarExample">
+            <ul class="navbar-nav mt-1 mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.GpxController.apropos()">A propos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.GpxController.listGpx("R", 1)">Randos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.GpxController.listGpx("T", 1)">Treks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.MaterielController.listMateriel()">Matériels</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.AdminController.agenda">Dans les jours qui viennent</a>
+                </li>
+            </ul>
+            <form class="form-inline pull-xs-right">
+                <input class="form-control" type="text" placeholder="Recherche">
+                <button class="btn btn-primary" type="submit">Recherche</button>
+            </form>
+        </div>
+    </div>
+</nav>

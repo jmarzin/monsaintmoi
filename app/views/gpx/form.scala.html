@@ -1,0 +1,61 @@
+@(form: Form[GpxForm],
+        id: Option[Long] = None,
+        listeCandidats: Seq[(Long, String, Long)] = Seq(),
+        listeMateriels: Seq[Materiel] = Seq())(implicit request: MessagesRequestHeader)
+@base.main() {
+  <div class="container">
+    <h2></h2>
+    @helper.form(action = id.map(routes.GpxController.updateGpx(_)).getOrElse(routes.GpxController.saveGpx), 'enctype -> "multipart/form-data") {
+      <fieldset>
+        @helper.CSRF.formField
+        <div hidden>
+          @helper.inputText(form("id"))
+          @helper.inputText(form("idTrek"))
+          @helper.inputText(form("listeMatos"))
+          @helper.inputText(form("depart"))
+          @helper.inputText(form("arrivee"))
+          @helper.inputText(form("coordonneesPix"))
+          @helper.inputText(form("typegpx"))
+          @helper.inputText(form("nomFichier"))
+        </div>
+        @helper.inputText(form("titre"), 'size -> 50)
+        @helper.inputText(form("sousTitre"), 'size -> 50)
+        @helper.inputText(form("heureDebut"))
+        @helper.inputText(form("heureFin"))
+        @helper.inputText(form("altitudeMinimum"))
+        @helper.inputText(form("altitudeMaximum"))
+        @helper.inputText(form("ascensionTotale"))
+        @helper.inputText(form("descenteTotale"))
+        @helper.inputText(form("distanceTotale"))
+        @if(form("typegpx").value.getOrElse("R") == "R") {
+          <dt><label for="fichierActuel">fichier serveur actuel</label></dt>
+          @defining(form("nomFichier").value.getOrElse("aucun")) { nomFic =>
+            <dd id="fichierActuel">@if(nomFic.isEmpty) {aucun} else {@nomFic}</dd>
+          }
+          @helper.select(form("listeFichiers"),
+            listeCandidats.map(f => (f._2, f._2)), '_label -> "nouveau fichier serveur")
+          <dt><label for="nouveauGpx">nouveau fichier local</label></dt>
+          <dd><input id="nouveauGpx" name="nouveauGpx" type="file"></dd>
+        } else {
+          @gpx.selectMultiple(
+            form("listeFichiers"),
+            listeCandidats.map(f => (f._1.toString + "," + f._2, f._2)),
+            '_label -> "Sélectionner les tracés à regrouper"
+          )
+          @gpx.selectMultiple(
+            form("listeMaterielsTrek"),
+            listeMateriels.map(m => (m.id.toString + "," + m.nom, m.nom)),
+            '_label -> "Sélectionner les matériels emportés"
+          )
+        }
+        @helper.textarea(form("description"), 'id -> "mytextarea", 'rows -> 15, 'cols -> 100)
+      </fieldset>
+      <button type="submit" class="btn btn-primary">
+      @id.map(_=> "Modifier").getOrElse("Créer")
+      </button>
+    }
+  </div>
+  <script type="text/javascript">
+          editeur()
+  </script>
+}

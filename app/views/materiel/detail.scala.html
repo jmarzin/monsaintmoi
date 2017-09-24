@@ -1,0 +1,35 @@
+@(materiel : Materiel)(implicit request: MessagesRequestHeader)
+@base.main() {
+    <div class="container">
+        @if(request.session.get("admin").contains("true")) {
+            <a type="button" class="btn btn-link fa fa-trash"
+            href="@routes.MaterielController.deleteMateriel(materiel.id)" onclick="deleteDialog(event)"></a>
+            <a type="button" class="btn btn-link fa fa-pencil"
+            href="@routes.MaterielController.editMateriel(materiel.id)"></a>
+        }
+        <div class="col-md-12 mt-2">
+            <div class="card">
+                <div class="card-block">
+                    @if(materiel.reforme) {
+                        <h3 style="text-decoration: line-through;
+                            color: red" class="card-title">@materiel.nom</h3>
+                    } else {
+                        <h3 class="card-title">@materiel.nom</h3>
+                    }
+                </div>
+                <h6 class="card-subtitle ml-4 mb-3">@materiel.poids g</h6>
+                <div class="row">
+                    <div class="col-md-3" child>
+                        <img class="card-img-top img-fluid"
+                        src="@routes.Assets.at("contenu/images/matos/" + materiel.photo)"
+                        alt="@materiel.nom">
+                    </div>
+                </div>
+                <div class="card-block">
+                    @Html(materiel.description)
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

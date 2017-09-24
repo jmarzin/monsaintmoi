@@ -1,0 +1,73 @@
+@(gpxs : Seq[Gpx], typegpx: String, pageAAffichier: Int, nbPages: Int)(implicit request: MessagesRequest[AnyContent])
+@import org.joda.time.DateTime
+@import org.joda.time.format.DateTimeFormat
+@base.main() {
+    <div class="container">
+        @if(request.session.get("admin").contains("true")) {
+            <a type="button" class="btn btn-link fa fa-plus" href="@routes.GpxController.newGpx(typegpx)"></a>
+        }
+
+        @if(nbPages > 1) {
+            <nav>
+                <ul class="pagination">
+                    @if(pageAAffichier == 1){
+                        <li class="page-item disabled">
+                    } else {
+                        <li class="page-item">
+                    }
+                        <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAffichier - 1)" tabindex="-1">Prec</a>
+                    </li>
+                    @for(i <- 1 to nbPages) {
+                        @if(i == pageAAffichier) {
+                            <li class="page-item active">
+                                <a class="page-link" href="#">@i<span class="sr-only">(current)</span></a>
+                        } else {
+                            <li class="page-item"><a class="page-link" href="@routes.GpxController.listGpx(typegpx, i)">@i</a></li>
+                        }
+                    }
+                    @if(pageAAffichier == nbPages){
+                        <li class="page-item disabled">
+                    } else {
+                        <li class="page-item">
+                        }
+                    <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAffichier + 1)" tabindex="-1">Suiv</a>
+                </li>
+                </ul>
+            </nav>
+        }
+        <div class="row">
+                @for(gpx <- gpxs) {
+                    <div class="col-md-4 child">
+                        <div class="card text-center">
+                            <div class="card-block">
+                                <h3 class="card-title">@gpx.titre</h3>
+                            @*</div>*@
+                            <h6 class="card-subtitle mb-3"><small>@gpx.sousTitre</small></h6>
+                            @*<div class="card-block">*@
+                                <div class="card-text">
+                                    <div id="mapid@gpx.id" class="mapidL"></div>
+                                </div>
+                                <p> @(gpx.distanceTotale/1000f) km +@gpx.ascensionTotale m -@gpx.descenteTotale m <br> le
+                                    @if(!gpx.heureDebut.isEmpty) {
+                                        @defining(new DateTime(gpx.heureDebut)) { d =>
+                                            @DateTimeFormat.forPattern("d MMMM yyyy").print(d)
+                                        }
+                                    }
+                                </p>
+                                <a href="@routes.GpxController.showGpx(gpx.id)" class="btn btn-primary">En savoir plus</a>
+                            </div>
+                            <script>
+                                @if(gpx.typegpx == "R") {
+                                    afficheCarte('mapid@gpx.id', '@routes.Assets.at("contenu/gpx/randos/" + gpx.nomFichier)',
+                                            '@gpx.depart', '@gpx.arrivee')
+                                } else {
+                                    afficheCarte('mapid@gpx.id', '@routes.Assets.at("contenu/gpx/treks/" + gpx.nomFichier)',
+                                            '@gpx.depart', '@gpx.arrivee')
+                                }
+                            </script>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+}

@@ -1,0 +1,41 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+GET     /admin                      controllers.AdminController.adminGet
+POST    /admin                      controllers.AdminController.adminPost
+GET     /agenda                     controllers.AdminController.agenda
++nocsrf
+POST    /uploadimage                controllers.AdminController.upLoadImage
+
+GET     /materiel/list              controllers.MaterielController.listMateriel
+GET     /materiels/list/:id         controllers.MaterielController.listTrekMateriel(id: Long)
+GET     /materiel/new               controllers.MaterielController.newMateriel
+GET     /materiel/:id               controllers.MaterielController.showMateriel(id: Long)
+GET     /materiel/:id/supp          controllers.MaterielController.deleteMateriel(id: Long)
+POST    /materiel                   controllers.MaterielController.saveMateriel
+PUT     /materiel                   controllers.MaterielController.saveMateriel
+GET     /materiel/:id/edit          controllers.MaterielController.editMateriel(id: Long)
+POST    /materiel/:id               controllers.MaterielController.updateMateriel(id: Long)
+PUT     /materiel/:id               controllers.MaterielController.updateMateriel(id: Long)
+
+GET     /gpx/list/:typegpx/:page    controllers.GpxController.listGpx(typegpx: String, page: Int)
+GET     /gpx/list/trek/:id/:page    controllers.GpxController.listGpxTrk(id: Long, page: Int)
+GET     /gpx/newGpx/:typegpx        controllers.GpxController.newGpx(typegpx: String)
+POST    /gpx                        controllers.GpxController.saveGpx
+PUT     /gpx                        controllers.GpxController.saveGpx
+GET     /gpx/:id/supp               controllers.GpxController.deleteGpx(id: Long)
+GET     /gpx/:id/edit               controllers.GpxController.editGpx(id: Long)
+GET     /gpx/:id                    controllers.GpxController.showGpx(id: Long)
+POST    /gpx/:id                    controllers.GpxController.updateGpx(id: Long)
+PUT     /gpx/:id                    controllers.GpxController.updateGpx(id: Long)
+
+GET     /apropos                    controllers.GpxController.apropos
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(file)
+

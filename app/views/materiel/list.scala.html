@@ -1,0 +1,39 @@
+@(materiels : Seq[Materiel])(implicit request: MessagesRequestHeader)
+@base.main() {
+    <div class="container">
+        <h3 class="mt-2"> Poids total du sac : @materiels.foldLeft(0)(_ + _.poids) g</h3>
+        @if(request.session.get("admin").contains("true")) {
+            <a type="button" class="btn btn-link fa fa-plus" href="@routes.MaterielController.newMateriel"></a>
+        }
+        <div class="row">
+                @for(mat <- materiels) {
+                    <div class="col-md-4 child">
+                        <div class="card text-center">
+                            <div class="card-block">
+                                @if(mat.reforme) {
+                                    <h3 style="text-decoration: line-through;
+                                        color: red" class="card-title">@mat.nom</h3>
+                                } else {
+                                    <h3 class="card-title">@mat.nom</h3>
+                                }
+                            </div>
+                            <h6 class="card-subtitle mb-3">@mat.poids g</h6>
+                            <div class="row">
+                                <div class="col-md-3" child></div>
+                                <div class="col-md-6" child>
+                                    <img class="card-img-top img-fluid"
+                                    src="@routes.Assets.at("contenu/images/matos/" + mat.photo)"
+                                    alt="@mat.nom"
+                                    style="height: 100px;">
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <p class="card-text" style="height: 100px;"> @mat.descriptionCourte</p>
+                                <a href="@routes.MaterielController.showMateriel(mat.id)" class="btn btn-primary">En savoir plus</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+}

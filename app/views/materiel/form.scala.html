@@ -1,0 +1,37 @@
+@(form: Form[Materiel], id: Option[Long] = None)(implicit request: MessagesRequestHeader)
+@import play.Environment
+@base.main() {
+  <div class="container">
+    <h2></h2>
+    @helper.form(action = id.map(routes.MaterielController.updateMateriel(_))
+            .getOrElse(routes.MaterielController.saveMateriel()), 'enctype -> "multipart/form-data") {
+      <fieldset>
+        @helper.CSRF.formField
+        <div hidden>@helper.inputText(form("id"))</div>
+        @helper.inputText(form("nom"), 'size -> 100)
+        <div class="row">
+          <div class="col-md-3" child>
+            <img class="img-fluid rounded mb-3 mb-md-0" src="@routes.Assets.at("contenu/images/matos/" + form.data("photo")) "
+            alt="photo du matériel">
+          </div>
+        </div>
+        @helper.select(form("photo")
+          ,new java.io.File("%s/contenu/images/matos/"
+                  .format(Environment.simple.rootPath.getCanonicalPath))
+                  .listFiles.map(f => f.getName)
+                  .filter(f => Seq(".jpg",".gif",".png").contains(f.substring(f.size-4, f.size).toLowerCase))
+                  .map(f => (f,f)).toSeq)
+        <input name="nouvellePhoto" type="file">
+        @helper.textarea(form("description"), 'id -> "mytextarea", 'rows -> 15, 'cols -> 100)
+        @helper.inputText(form("poids"))
+        @helper.checkbox(form("reforme"))
+      </fieldset>
+      <button type="submit" class="btn btn-primary">
+      @id.map(_=> "Modifier").getOrElse("Créer")
+      </button>
+    }
+  </div>
+  <script type="text/javascript">
+          editeur();
+  </script>
+}

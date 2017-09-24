@@ -1,0 +1,12 @@
+# https://www.playframework.com/documentation/latest/ScalaI18N
+validation.errors = Erreur de saisie
+error.required = Saisir une valeur
+constraint.required = Champ obligatoire
+password = Mot de Passe
+submit = Valider
+nouvellePhoto = nouvelle photo
+format.numeric = Numérique
+error.number = Saisir un nombre
+constraint.min = Valeur minimum : {0}
+error.min = Saisir une valeur supérieure à {0}
+format.boolean =

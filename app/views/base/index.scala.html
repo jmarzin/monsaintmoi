@@ -1,0 +1,38 @@
+@(ecartRetraite: String, ecartDepart: String)(implicit request: MessagesRequestHeader)
+
+@base.main() {
+  <img class="img-fluid rounded mb-3 mb-md-0" src="@routes.Assets.at("images/saintjacques.jpg")" alt="Saint-Jacques de Compostelle">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <h4 class="card-header">Petit départ</h4>
+          <div class="card-block">
+            <h1 class="card-text"><em>@ecartRetraite</em></h1>
+          </div>
+          <div class="card-footer">
+            <p><button type="button" title="Explication" class="btn-primary"
+            data-toggle="popover" data-content="C'est le temps qui me sépare de mon départ en retraite !">En savoir plus</button></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <h4 class="card-header">Grand départ</h4>
+          <div class="card-block">
+            <h1 class="card-text"><em>@ecartDepart</em></h1>
+          </div>
+          <div class="card-footer">
+            <p><button type="button" title="Explication" class="btn-primary"
+            data-toggle="popover" data-content="C'est le temps qui me sépare de mon départ pour Saint-Jacques !">En savoir plus</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+          $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+          });
+  </script>
+}

@@ -1,0 +1,11 @@
+@(adminForm: Form[Admin])(implicit request: MessagesRequestHeader)
+
+@base.main() {
+  <div class="container">
+  @helper.form(action = routes.AdminController.adminPost()) {
+    @helper.CSRF.formField
+    @helper.inputPassword(adminForm("password"), 'autofocus -> "true")
+    <input type="submit" class="btn btn-primary" value="Valider"/>
+  }
+  </div>
+}
