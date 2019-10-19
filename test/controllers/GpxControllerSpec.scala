@@ -1,24 +1,24 @@
 package controllers
 
-import javax.inject._
-import play.api._
+import models.{GpxRep, MaterielRep, TrekMaterielRep}
+import org.mockito.Mock
 import play.api.mvc._
 import play.api.i18n._
-
-import play.api.data._
-import play.api.data.Forms._
-
 import org.scalatestplus.play._
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import play.api.http.FileMimeTypes
 import play.api.test._
 import play.api.test.Helpers._
+import play.api.test.CSRFTokenHelper._
+import org.scalatest.mockito.MockitoSugar
 
-import play.filters.csrf.CSRF.Token
-import play.filters.csrf.{CSRFConfigProvider, CSRFFilter}
+import scala.concurrent.ExecutionContext
+
 
 /**
  * Gpx form controller specs
  */
-class GpxControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class GpxControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting with MockitoSugar{
 
   // Provide stubs for components based off Helpers.stubControllerComponents()
   class StubComponents(cc:ControllerComponents = stubControllerComponents()) extends MessagesControllerComponents {
@@ -34,18 +34,21 @@ class GpxControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting 
   "GpxController GET" should {
 
     "render the index page from a new instance of controller" in {
-      val controller = new GpxController(new StubComponents())
-      val request = FakeRequest().withCSRFToken
-      val home = controller.gpxGet().apply(request)
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+//      val repoGpx = Mock[GpxRep]
+//      val repoTrekMateriels = Mock[TrekMaterielRep]
+//      val repoMateriels = Mock[MaterielRep]
+//      val controller = new GpxController(repoGpx, repoTrekMateriels, repoMateriels, new StubComponents())
+//      val request = FakeRequest().withCSRFToken
+//      val home = controller.newGpx("T").apply(request)
+//
+//      status(home) mustBe OK
+//      contentType(home) mustBe Some("text/html")
     }
 
     "render the index page from the application" in {
       val controller = inject[GpxController]
       val request = FakeRequest().withCSRFToken
-      val home = controller.gpxGet().apply(request)
+      val home = controller.newGpx("T").apply(request)
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
@@ -71,5 +74,4 @@ class GpxControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting 
       status(home) mustBe SEE_OTHER
     }
   }
-
 }

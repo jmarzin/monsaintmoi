@@ -194,7 +194,8 @@ class GpxRep @Inject() (dbConfigProvider: DatabaseConfigProvider,
 
 
     def * = (id, idTrek, titre, sousTitre, description, listeMatos, nomFichier, altitudeMinimum, altitudeMaximum,
-      ascensionTotale, descenteTotale, heureDebut, heureFin, distanceTotale, depart, arrivee, coordonneesPix, typegpx) <> ((Gpx.apply _).tupled, Gpx.unapply)
+      ascensionTotale, descenteTotale, heureDebut, heureFin, distanceTotale, depart, arrivee, coordonneesPix,
+      typegpx) <> ((Gpx.apply _).tupled, Gpx.unapply)
   }
 
   /**

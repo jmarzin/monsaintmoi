@@ -7,7 +7,6 @@ import play.api.i18n.{Langs, MessagesApi}
 import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
-
 import scala.concurrent.ExecutionContext
 
 /**

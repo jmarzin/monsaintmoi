@@ -72,7 +72,7 @@ class GpxController @Inject()(repoGpx: GpxRep,
   def listGpxTrk(id: Long, page: Int) = Action { implicit request: MessagesRequest[AnyContent] =>
     val gpxs = repoGpx.listByTrekId(id).sortWith(_.heureDebut < _.heureDebut)
     val gpxsAAfficher = preparePage(gpxs, page)
-    Ok(views.html.gpx.list(gpxsAAfficher._1, "R", gpxsAAfficher._2, gpxsAAfficher._3))
+    Ok(views.html.gpx.list(gpxsAAfficher._1, "R", gpxsAAfficher._2, gpxsAAfficher._3, id))
   }
 
   def showGpx(id: Long) = Action { implicit request: MessagesRequest[AnyContent] =>
@@ -210,8 +210,7 @@ class GpxController @Inject()(repoGpx: GpxRep,
           listeCandidats= tableaux._1,
           listeMateriels = tableaux._2))
       }.getOrElse(NotFound)
-    }
-  }
+    }}
 
   def updateGpx(id: Long): Action[MultipartFormData[Files.TemporaryFile]] =
       Action(parse.multipartFormData) { implicit request: MessagesRequest[MultipartFormData[TemporaryFile]] =>

@@ -11,15 +11,16 @@ case class MaDate(var annee: Int, var mois: Int, var jour: Int) {
   def ecartA(date: MaDate): String= {
     if (date.jour < this.jour) {
       date.mois match {
-        case 2 | 4 | 6 | 8 | 10 | 12 => date.jour += 30
+        case 2 | 4 | 6 | 8 | 10 | 12 => date.jour += 31
         case 3 => date.jour += 28
-        case _ => date.jour += 31
+        case _ => date.jour += 30
       }
       date.mois -= 1
     }
     if (date.mois < this.mois) {
       date.mois += 12
       date.annee -= 1
+      if(date.mois % 2 == 0) date.jour+=1
     }
     if (date.annee < this.annee) {
       "Je suis déjà parti !"

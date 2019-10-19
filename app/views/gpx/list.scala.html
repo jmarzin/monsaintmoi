@@ -1,4 +1,4 @@
-@(gpxs : Seq[Gpx], typegpx: String, pageAAffichier: Int, nbPages: Int)(implicit request: MessagesRequest[AnyContent])
+@(gpxs : Seq[Gpx], typegpx: String, pageAAfficher: Int, nbPages: Int, id: Long = 0L)(implicit request: MessagesRequest[AnyContent])
 @import org.joda.time.DateTime
 @import org.joda.time.format.DateTimeFormat
 @base.main() {
@@ -10,27 +10,41 @@
         @if(nbPages > 1) {
             <nav>
                 <ul class="pagination">
-                    @if(pageAAffichier == 1){
+                    @if(pageAAfficher == 1){
                         <li class="page-item disabled">
                     } else {
                         <li class="page-item">
                     }
-                        <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAffichier - 1)" tabindex="-1">Prec</a>
+                    @if(id != 0L) {
+                        <a class="page-link" href="@routes.GpxController.listGpxTrk(id, pageAAfficher - 1)" tabindex="-1">Prec</a>
+                    } else {
+                        <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAfficher - 1)" tabindex="-1">Prec</a>
+                    }
                     </li>
                     @for(i <- 1 to nbPages) {
-                        @if(i == pageAAffichier) {
+                        @if(i == pageAAfficher) {
                             <li class="page-item active">
                                 <a class="page-link" href="#">@i<span class="sr-only">(current)</span></a>
                         } else {
-                            <li class="page-item"><a class="page-link" href="@routes.GpxController.listGpx(typegpx, i)">@i</a></li>
+                            @if(id != 0L) {
+                                <li class="page-item"><a class="page-link" href="@routes.GpxController.listGpxTrk(id, i)">@i</a></li>
+                            } else {
+                                <li class="page-item"><a class="page-link" href="@routes.GpxController.listGpx(typegpx, i)">@i</a></li>
+                            }
                         }
                     }
-                    @if(pageAAffichier == nbPages){
+                    @if(pageAAfficher == nbPages){
                         <li class="page-item disabled">
                     } else {
                         <li class="page-item">
+                    }
+                        @if(id != 0L) {
+                            <a class="page-link" href="@routes.GpxController.listGpxTrk(id, pageAAfficher + 1)" tabindex="-1">
+                                Suiv</a>
+                        } else {
+                            <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAfficher + 1)" tabindex="-1">
+                                Suiv</a>
                         }
-                    <a class="page-link" href="@routes.GpxController.listGpx(typegpx, pageAAffichier + 1)" tabindex="-1">Suiv</a>
                 </li>
                 </ul>
             </nav>
@@ -42,12 +56,15 @@
                             <div class="card-block">
                                 <h3 class="card-title">@gpx.titre</h3>
                             @*</div>*@
-                            <h6 class="card-subtitle mb-3"><small>@gpx.sousTitre</small></h6>
+                                <h6 class="card-subtitle mb-3"><small>@gpx.sousTitre</small></h6>
                             @*<div class="card-block">*@
                                 <div class="card-text">
                                     <div id="mapid@gpx.id" class="mapidL"></div>
                                 </div>
-                                <p> @(gpx.distanceTotale/1000f) km +@gpx.ascensionTotale m -@gpx.descenteTotale m <br> le
+                                <i class="fa fa-arrow-right"></i> @(gpx.distanceTotale/1000f) km
+                                <i class="fa fa-arrow-up"></i> @gpx.ascensionTotale m
+                                <i class="fa fa-arrow-down"></i> @gpx.descenteTotale m
+                                <br> le
                                     @if(!gpx.heureDebut.isEmpty) {
                                         @defining(new DateTime(gpx.heureDebut)) { d =>
                                             @DateTimeFormat.forPattern("d MMMM yyyy").print(d)
